@@ -1,6 +1,6 @@
 package nl.simpliphi.customerservice.customer;
 
-import io.github.alikelleci.easysourcing.messages.commands.annotations.HandleCommand;
+import com.github.easysourcing.messages.commands.annotations.HandleCommand;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
 import nl.simpliphi.shopdomain.customer.Customer;
@@ -23,22 +23,22 @@ public class CustomerCommandHandler {
     }
 
     @HandleCommand
-    public CustomerEvent handle(CustomerCommand.CreateCustomer command, Customer currentState) {
+    public CustomerEvent handle(Customer currentState, CustomerCommand.CreateCustomer command) {
         if (currentState != null) {
             throw new ValidationException("Customer already exists!");  // only visible in debug logging
         }
 
-        return mapper.map(command, CustomerEvent.CustomerCreated.class);
+        //return mapper.map(command, CustomerEvent.CustomerCreated.class);
 
-//        return CustomerEvent.CustomerCreated.builder()
-//                .customerId(command.getCustomerId())
-//                .firstName(command.getFirstName())
-//                .lastName(command.getLastName())
-//                .build();
+        return CustomerEvent.CustomerCreated.builder()
+                .customerId(command.getCustomerId())
+                .firstName(command.getFirstName())
+                .lastName(command.getLastName())
+                .build();
     }
 
     @HandleCommand
-    public CustomerEvent handle(CustomerCommand.ChangeFirstName command, Customer currentState) {
+    public CustomerEvent handle(Customer currentState, CustomerCommand.ChangeFirstName command) {
         if (currentState == null) {
             throw new ValidationException("Customer does not exist!");
         }
